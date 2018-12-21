@@ -10,6 +10,6 @@ Enter the `js/` subdirectory of this repository and run `npm install` to install
 
 To run a full trading activity report, you could do something like:
 
-```nodejs
+```bash
 node report.js "me@mydomain.com" "myPa$$w0rd" "2018-11-01T18:58:46.755Z" > data-out.jsonp 
 ```
