@@ -182,10 +182,10 @@ var main = async () => {
 
     var token = await authenticate(uid, pwd);
     //var orderId = await postOrder("btc","usd","0.006", uid, token)
-    console.log(`Token: ${token}`);
+    //console.log(`Token: ${token}`);
 
     var orderHistory = await getOrderHistory(uid, token)
-    console.log(`History: ${JSON.stringify(orderHistory)}`);
+    //console.log(`History: ${JSON.stringify(orderHistory)}`);
     //return;
     var ctr = 0
     for(var k in orderHistory) {
