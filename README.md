@@ -8,8 +8,8 @@ This repository contains examples of using the Routefire REST API for algorithmi
 
 Enter the `js/` subdirectory of this repository and run `npm install` to install dependencies.
 
-To run a full trading activity report, you could do something like:
+To run a full trading activity report, you would execute a command such as:
 
 ```bash
-node report.js "me@mydomain.com" "myPa$$w0rd" "2018-11-01T18:58:46.755Z" > data-out.jsonp 
+node report.js "me@mydomain.com" "myPa$$w0rd" "2018-11-01T00:00:00.000Z" > november-snapshot.jsonp 
 ```
