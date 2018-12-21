@@ -162,8 +162,6 @@ function sleep(ms){
   })
 }
 
-var s = "2018-12-19T20:50:19.972144Z";
-
 var main = async () => {
     var uid = process.argv[2]; // with your userid 
     var pwd = process.argv[3]; // with your password
