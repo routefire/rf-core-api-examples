@@ -1,8 +1,8 @@
 {
-  "name": "example",
+  "name": "routefire-api-examples",
   "version": "1.0.0",
   "description": "",
-  "main": "example.js",
+  "main": "report.js",
   "dependencies": {
     "request": "^2.88.0"
   },
