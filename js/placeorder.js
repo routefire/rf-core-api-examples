@@ -1,4 +1,4 @@
-// Usage: `node report.js <username> <password> [<minimum submit date/time in ISO format>]`
+// Usage: `node placeorder.js <username> <password>`
 var request = require("request");
 
 function authenticate(uid, password) {
@@ -163,46 +163,37 @@ function sleep(ms){
 }
 
 var main = async () => {
-    var uid = process.argv[2]; // with your userid 
-    var pwd = process.argv[3]; // with your password
-    if((!uid) || (!pwd)) {
-      console.log("Usage: nodejs report.js <uid> <password> [<minimum submit date/time in ISO format>]");
+    var uid =  process.argv[2] // your userid 
+    var pwd =  process.argv[3] // your password
+    var qty = process.argv[4] // quantity to buy
+    if((!uid) || (!pwd) || (!qty)) {
+      console.log("Usage: nodejs report.js <uid> <password> <quantity>\nWill buy <quantity> BTC using a TWAP algorithm for execution.");
       return;
-    }
-    var minDtStr = process.argv[4];
-    let minDt = undefined; 
-    try {
-      if((!!process.argv[4]) && process.argv[4].length > 0) {
-        minDt = Date.parse(minDtStr);
-      }
-    } catch(e) {
-      console.log("Bad date format\n")
-      return
     }
 
     var token = await authenticate(uid, pwd);
-    //var orderId = await postOrder("btc","usd","0.006", uid, token)
-    //console.log(`Token: ${token}`);
+    var orderId = await postOrder("btc","usd",qty, uid, token)
 
-    var orderHistory = await getOrderHistory(uid, token)
-    //console.log(`History: ${JSON.stringify(orderHistory)}`);
-    //return;
-    var ctr = 0
-    for(var k in orderHistory) {
-      var rfoid = orderHistory[k].RoutefireOrderId;
-      var dtStr = orderHistory[k].SubmissionTime;
-      var dt = Date.parse(orderHistory[k].SubmissionTime);
-      if((!!minDt) && (minDt > dt)) {
-        continue
+    var i = 0
+    while (true) {
+      console.log("Checking ....")
+      
+      var status = await getStatus(orderId, uid, token)
+      var filled = await getFilled(orderId, uid, token)
+
+      console.log(`Round ${i}...`)
+      console.log("status ->", status)
+      console.log("filled ->", filled)
+
+      if (status == "COMPLETE") {
+        console.log("Order completed.")
+        break
       }
-      //console.log("Order info: " + rfoid);
-      var orderInfo = await getOrderInfo(rfoid, uid, token)
-      console.log(JSON.stringify(orderInfo));
-      ctr += 1
+
+      await sleep(5000)
+      i ++
     }
-
 }
-
 
 main();
 
