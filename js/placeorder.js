@@ -27,6 +27,67 @@ function authenticate(uid, password) {
     })
 }
 
+
+function inquire(buy, sell, qty, uid, token) {
+  // Setting URL and headers for request
+  var headers = {"Authorization": ("Bearer " + token)}
+  // The algorithm parameters are documented at: https://routefire.io/algo-docs
+  var data = {
+    "uid": uid, 
+    "buy_asset": buy, 
+    "sell_asset": sell, 
+    "qty": qty,  // must be a string
+  };
+  var options = {
+      url: 'https://routefire.io/api/v1/data/inquire',
+      headers: headers,
+      body: JSON.stringify(data)
+  };
+  // Return new promise 
+  return new Promise(function(resolve, reject) {
+    // Do async job
+      request.post(options, function(err, resp, body) {
+          if (err) {
+              reject(err);
+          } else {
+              res = JSON.parse(body)
+              resolve(res);
+          }
+      })
+  })
+}
+
+function getOrderBook(buy, sell, uid, token) {
+  // Setting URL and headers for request
+  var headers = {"Authorization": ("Bearer " + token)}
+  // The algorithm parameters are documented at: https://routefire.io/algo-docs
+  var data = {
+    "uid": uid, 
+    "buy_asset": buy, 
+    "sell_asset": sell, 
+    "qty": "0.0", 
+  };
+  var options = {
+      url: 'https://routefire.io/api/v1/data/consolidated',
+      headers: headers,
+      body: JSON.stringify(data)
+  };
+  // Return new promise 
+  return new Promise(function(resolve, reject) {
+    // Do async job
+      request.post(options, function(err, resp, body) {
+          if (err) {
+              reject(err);
+          } else {
+              res = JSON.parse(body)
+              resolve(res);
+          }
+      })
+  })
+}
+
+
+
 function postOrder(buy, sell, qty, uid, token) {
   // Setting URL and headers for request
   var headers = {"Authorization": ("Bearer " + token)}
@@ -166,12 +227,21 @@ var main = async () => {
     var uid =  process.argv[2] // your userid 
     var pwd =  process.argv[3] // your password
     var qty = process.argv[4] // quantity to buy
-    if((!uid) || (!pwd) || (!qty)) {
+    if((!uid) || (!pwd)) {
       console.log("Usage: nodejs report.js <uid> <password> <quantity>\nWill buy <quantity> BTC using a TWAP algorithm for execution.");
       return;
     }
 
     var token = await authenticate(uid, pwd);
+    if((!qty)) {
+      console.log("No quantity, just inquiring...");
+      var rig = await getOrderBook("btc","usd",uid,token);
+      console.log(JSON.stringify(rig));
+      var rig2 = await inquire("btc","usd","0.5",uid,token);
+      console.log(JSON.stringify(rig2));
+      return;
+    }
+
     var orderId = await postOrder("btc","usd",qty, uid, token)
 
     var i = 0
