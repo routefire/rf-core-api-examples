@@ -26,6 +26,16 @@ node placeorder.js "me@mydomain.com" "myPa$$w0rd" "0.01"
 
 This particular example watches the order until its completion, printing the latest status to the screen every 5 seconds.
 
+#### Market inquiries and order book data 
+
+The `placeorder.js` example will obtain full depth-of-book data as well as a top-of-book inquiry for 0.5 BTC if you omit the quantity:
+
+```bash
+node placeorder.js "me@mydomain.com" "myPa$$w0rd"
+```
+
+This is primarily an example of how to use the functions `getOrderBook` and `inquire` contained in the file `placeorder.js`, which demonstrate how to pull market data from Routefire.
+
 ## Dependencies
 
 ### Node
