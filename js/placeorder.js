@@ -120,6 +120,45 @@ function postOrder(buy, sell, qty, uid, token) {
   })
 }
 
+// To go short, the changes required are extra algo params:
+//   1. `exchanges_specified`: allowed exchanges, comma-delimited (currently only `BITFINEX` and `KRAKEN` are available)
+//   2. `borrow_instruction`: type of borrows to perform, comma-delimited (currently only `margin` is available) 
+//   3. `order_type`: `short` or `cover` for short positions; levered long support TBD. 
+function postShort(crypto, fiat, qty, uid, token) {
+   let buy = crypto;
+   let sell = fiat;
+  // Setting URL and headers for request
+  var headers = {"Authorization": ("Bearer " + token)}
+  // The algorithm parameters are documented at: https://routefire.io/algo-docs
+  var data = {
+    "user_id": uid, 
+    "buy_asset": buy, 
+    "sell_asset": sell, 
+    "quantity": qty, 
+    "price": "0.0", 
+    "algo": "twap", 
+    "algo_params": {"iwould":"", "target_seconds": "300", "backfill": "1.0", "max_participation": "1.0", "aggression": "0.0", "exchanges_specified": "BITFINEX,KRAKEN", "borrow_instruction": "margin", "order_type": "short"}
+  };
+  var options = {
+      url: 'https://routefire.io/api/v1/orders/submit',
+      headers: headers,
+      body: JSON.stringify(data)
+  };
+  // Return new promise 
+  return new Promise(function(resolve, reject) {
+    // Do async job
+      request.post(options, function(err, resp, body) {
+          if (err) {
+              reject(err);
+          } else {
+              res = JSON.parse(body)
+              resolve(res['order_id'])
+          }
+      })
+  })
+}
+
+
 function getStatus(oid, uid, token) {
   // Setting URL and headers for request
   var headers = {"Authorization": ("Bearer " + token)}
@@ -242,7 +281,14 @@ var main = async () => {
       return;
     }
 
-    var orderId = await postOrder("btc","usd",qty, uid, token)
+    var orderId = undefined;
+
+    if(qty < 0) {
+      qty = -1 * parseFloat(JSON.stringify(qty));
+      orderId = await postShort("btc","usd",qty, uid, token)
+    } else {
+      orderId = await postOrder("btc","usd",qty, uid, token)
+    }
 
     var i = 0
     while (true) {
