@@ -18,10 +18,18 @@ node report.js "me@mydomain.com" "myPa$$w0rd" "2018-11-01T00:00:00.000Z" > novem
 
 #### Order entry and status
 
-To submit an order and watch it until completion using the API, one could buy 0.01 BTC using the TWAP execution algorithm via:
+To submit an order and watch it until completion using the API, one could buy 0.02 BTC using the TWAP execution algorithm via:
 
 ```bash
-node placeorder.js "me@mydomain.com" "myPa$$w0rd" "0.01"
+node placeorder.js "me@mydomain.com" "myPa$$w0rd" "0.02"
+```
+
+#### Shorting example
+
+To place a margin short and watch it until completion using the API, one could buy 0.02 BTC using the TWAP execution algorithm via:
+
+```bash
+node placeorder.js "me@mydomain.com" "myPa$$w0rd" "-0.02"
 ```
 
 This particular example watches the order until its completion, printing the latest status to the screen every 5 seconds.

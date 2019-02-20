@@ -125,8 +125,8 @@ function postOrder(buy, sell, qty, uid, token) {
 //   2. `borrow_instruction`: type of borrows to perform, comma-delimited (currently only `margin` is available) 
 //   3. `order_type`: `short` or `cover` for short positions; levered long support TBD. 
 function postShort(crypto, fiat, qty, uid, token) {
-   let buy = crypto;
-   let sell = fiat;
+   let sell = crypto;
+   let buy = fiat;
   // Setting URL and headers for request
   var headers = {"Authorization": ("Bearer " + token)}
   // The algorithm parameters are documented at: https://routefire.io/algo-docs
@@ -283,8 +283,9 @@ var main = async () => {
 
     var orderId = undefined;
 
-    if(qty < 0) {
-      qty = -1 * parseFloat(JSON.stringify(qty));
+    if(parseFloat(qty) < 0) {
+      console.log("Entering short position....");
+      qty = JSON.stringify(-1 * parseFloat(qty));
       orderId = await postShort("btc","usd",qty, uid, token)
     } else {
       orderId = await postOrder("btc","usd",qty, uid, token)
