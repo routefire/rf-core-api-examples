@@ -24,6 +24,14 @@ To submit an order and watch it until completion using the API, one could buy 0.
 node placeorder.js "me@mydomain.com" "myPa$$w0rd" "0.02"
 ```
 
+#### Order entry, get status, then cancellation
+
+To submit an order, get status, then cancel through the API, one could buy 0.02 BTC using the TWAP execution algorithm via:
+
+```bash
+node cancelorder.js "me@mydomain.com" "myPa$$w0rd" "0.02"
+```
+
 #### Shorting example
 
 To place a margin short and watch it until completion using the API, one could buy 0.02 BTC using the TWAP execution algorithm via:
