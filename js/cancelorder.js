@@ -96,7 +96,7 @@ function postOrder(buy, sell, qty, uid, token) {
     "sell_asset": sell,
     "quantity": qty,
     "price": "0.0",
-    "algo": "twap",
+    "algo": "rfxw",
     "algo_params": {"iwould":"", "target_seconds": "300", "backfill": "1.0", "max_participation": "1.0", "aggression": "0.0"}
   };
   var options = {
@@ -161,7 +161,7 @@ function postShort(crypto, fiat, qty, uid, token) {
     "sell_asset": sell,
     "quantity": qty,
     "price": "0.0",
-    "algo": "twap",
+    "algo": "rfxw",
     "algo_params": {"iwould":"", "target_seconds": "300", "backfill": "1.0", "max_participation": "1.0", "aggression": "0.0", "exchanges_specified": "BITFINEX,KRAKEN", "borrow_instruction": "margin", "order_type": "short"}
   };
   var options = {
@@ -292,7 +292,7 @@ var main = async () => {
   var pwd =  process.argv[3] // your password
   var qty = process.argv[4] // quantity to buy
   if((!uid) || (!pwd)) {
-    console.log("Usage: nodejs report.js <uid> <password> <quantity>\nWill buy <quantity> BTC using a TWAP algorithm for execution.");
+    console.log("Usage: nodejs cancelorder.js <uid> <password> <quantity>\nWill buy <quantity> BTC using a RFXW algorithm for execution.");
     return;
   }
 

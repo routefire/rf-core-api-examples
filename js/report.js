@@ -27,84 +27,6 @@ function authenticate(uid, password) {
     })
 }
 
-function postOrder(buy, sell, qty, uid, token) {
-  // Setting URL and headers for request
-  var headers = {"Authorization": ("Bearer " + token)}
-  // The algorithm parameters are documented at: https://routefire.io/algo-docs
-  var data = {
-    "user_id": uid, 
-    "buy_asset": buy, 
-    "sell_asset": sell, 
-    "quantity": qty, 
-    "price": "0.0", 
-    "algo": "twap", 
-    "algo_params": {"iwould":"", "target_seconds": "300", "backfill": "1.0", "max_participation": "1.0", "aggression": "0.0"}
-  };
-  var options = {
-      url: 'https://routefire.io/api/v1/orders/submit',
-      headers: headers,
-      body: JSON.stringify(data)
-  };
-  // Return new promise 
-  return new Promise(function(resolve, reject) {
-    // Do async job
-      request.post(options, function(err, resp, body) {
-          if (err) {
-              reject(err);
-          } else {
-              res = JSON.parse(body)
-              resolve(res['order_id'])
-          }
-      })
-  })
-}
-
-function getStatus(oid, uid, token) {
-  // Setting URL and headers for request
-  var headers = {"Authorization": ("Bearer " + token)}
-  var data = {"user_id": uid, "order_id": oid}
-  var options = {
-      url: 'https://routefire.io/api/v1/orders/status',
-      headers: headers,
-      body: JSON.stringify(data)
-  };
-  // Return new promise 
-  return new Promise(function(resolve, reject) {
-    // Do async job
-      request.post(options, function(err, resp, body) {
-          if (err) {
-              reject(err);
-          } else {
-              res = JSON.parse(body)
-              resolve(res['status'])
-          }
-      })
-  })
-}
-
-function getFilled(oid, uid, token) {
-  // Setting URL and headers for request
-  var headers = {"Authorization": ("Bearer " + token)}
-  var data = {"user_id": uid, "order_id": oid}
-  var options = {
-      url: 'https://routefire.io/api/v1/orders/status',
-      headers: headers,
-      body: JSON.stringify(data)
-  };
-  // Return new promise 
-  return new Promise(function(resolve, reject) {
-    // Do async job
-      request.post(options, function(err, resp, body) {
-          if (err) {
-              reject(err);
-          } else {
-              res = JSON.parse(body)
-              resolve(res['filled'])
-          }
-      })
-  })
-}
-
 function getOrderInfo(oid, uid, token) {
   // Setting URL and headers for request
   var headers = {"Authorization": ("Bearer " + token)}
@@ -181,12 +103,8 @@ var main = async () => {
     }
 
     var token = await authenticate(uid, pwd);
-    //var orderId = await postOrder("btc","usd","0.006", uid, token)
-    //console.log(`Token: ${token}`);
 
     var orderHistory = await getOrderHistory(uid, token)
-    //console.log(`History: ${JSON.stringify(orderHistory)}`);
-    //return;
     var ctr = 0
     for(var k in orderHistory) {
       var rfoid = orderHistory[k].RoutefireOrderId;

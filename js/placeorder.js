@@ -98,7 +98,7 @@ function postOrder(buy, sell, qty, uid, token) {
     "sell_asset": sell, 
     "quantity": qty, 
     "price": "0.0", 
-    "algo": "twap", 
+    "algo": "rfxw", 
     "algo_params": {"iwould":"", "target_seconds": "300", "backfill": "1.0", "max_participation": "1.0", "aggression": "0.0"}
   };
   var options = {
@@ -136,7 +136,7 @@ function postShort(crypto, fiat, qty, uid, token) {
     "sell_asset": sell, 
     "quantity": qty, 
     "price": "0.0", 
-    "algo": "twap", 
+    "algo": "rfxw", 
     "algo_params": {"iwould":"", "target_seconds": "300", "backfill": "1.0", "max_participation": "1.0", "aggression": "0.0", "exchanges_specified": "BITFINEX,KRAKEN", "borrow_instruction": "margin", "order_type": "short"}
   };
   var options = {
@@ -205,56 +205,6 @@ function getFilled(oid, uid, token) {
   })
 }
 
-function getOrderInfo(oid, uid, token) {
-  // Setting URL and headers for request
-  var headers = {"Authorization": ("Bearer " + token)}
-  var data = {
-    "user_id": uid, 
-    "routefire_order_id": oid
-  }
-  var options = {
-      url: 'https://routefire.io/api/v1/order-report',
-      headers: headers,
-      body: JSON.stringify(data)
-  };
-  // Return new promise 
-  return new Promise(function(resolve, reject) {
-    // Do async job
-      request.post(options, function(err, resp, body) {
-          if (err) {
-              reject(err);
-          } else {
-              res = JSON.parse(body)
-              resolve(res)
-          }
-      })
-  })
-}
-
-function getOrderHistory(uid, token) {
-  // Setting URL and headers for request
-  var headers = {"Authorization": ("Bearer " + token)}
-  var data = {
-    "uid": uid
-  }
-  var options = {
-      url: 'https://routefire.io/api/v1/all-historical-trades',
-      headers: headers,
-      body: JSON.stringify(data)
-  };
-  // Return new promise 
-  return new Promise(function(resolve, reject) {
-    // Do async job
-      request.post(options, function(err, resp, body) {
-          if (err) {
-              reject(err);
-          } else {
-              res = JSON.parse(body)
-              resolve(res['data'])
-          }
-      })
-  })
-}
 
 function sleep(ms){
   return new Promise(resolve=>{
@@ -267,7 +217,7 @@ var main = async () => {
     var pwd =  process.argv[3] // your password
     var qty = process.argv[4] // quantity to buy
     if((!uid) || (!pwd)) {
-      console.log("Usage: nodejs report.js <uid> <password> <quantity>\nWill buy <quantity> BTC using a TWAP algorithm for execution.");
+      console.log("Usage: nodejs placeorder.js <uid> <password> <quantity>\nWill buy <quantity> BTC using a RFXW algorithm for execution.");
       return;
     }
 
