@@ -2,7 +2,6 @@
 var request = require("request");
 
 var urlBase = "https://routefire.io"
-urlBase = "http://localhost:8081"
 
 function authenticate(uid, password) {
     // Setting URL and headers for request
